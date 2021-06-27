@@ -1,0 +1,6 @@
+fritzconnection
+dotenv
+urllib
+xmltodict
+smbclient
+pydub
