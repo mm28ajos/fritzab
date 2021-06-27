@@ -134,7 +134,10 @@ with urllib.request.urlopen(message_list_url) as f:
 
 for a in messages['Root']['Message']:
 
-    msg_info = a['Date'] + " " + a['Number'] + " (" + a['Name'] + ") " 
+    msg_info = a['Date'] + " - " + a['Number']
+    if len(a['Name']) > 1:
+        msg_info += " (" + a['Name'] + ") "
+    msg_tags = {'title': msg_info, 'artist': 'Answerting Machine' ,'album': "TAM" + a['Tam'], 'comment': 'Message of a telephone answering machine'}
     
     # Select only new messages
     message_new = bool(int(a['New']))
@@ -152,7 +155,7 @@ for a in messages['Root']['Message']:
         
         # Only convert and upload if message is longer than 5 seconds.
         if msg.duration_seconds > 5.0:
-            msg.export("/tmp/message.ogg", format="ogg")
+            msg.export("/tmp/message.ogg", format="ogg", tags=msg_tags)
 
             ### POST MESSAGES TO MATRIX PRIVATE CHAT ###
             ############################################
@@ -161,7 +164,7 @@ for a in messages['Root']['Message']:
             
             # Send message and file to Matrix Room
             command = "python3 matrix-commander.py -a /tmp/message.ogg -m '{}'".format(msg_info)
-#            os.system(command)
+            os.system(command)
             
         else:
             # Mark MessageInfo as too short 
@@ -175,6 +178,10 @@ for a in messages['Root']['Message']:
             
     else:
         print("__ " + msg_info)
+
+        ## For testing purposes only
+        if a['Number'].endswith('7714'):
+            fc.call_action("X_AVM-DE_TAM1", "MarkMessage", NewIndex=0, NewMessageIndex=int(a['Index']), NewMarkedAsRead=0)                
         continue
 
     continue
