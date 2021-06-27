@@ -1,6 +1,19 @@
 fritzconnection
-dotenv
-urllib
+python-dotenv
 xmltodict
-smbclient
+smbprotocol
 pydub
+
+# for matrix-commander
+
+aiohttp
+aiofiles<0.5.0,>=0.4.0
+argparse
+asyncio
+datetime
+markdown
+matrix-nio[e2e]>=0.14.1
+Pillow
+python_magic
+uuid
+
