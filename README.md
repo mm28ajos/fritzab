@@ -27,6 +27,7 @@ FRITZ_PASSWORD="SomeRand0mPa55word"
 FRITZ_IP="192.168.178.1" 
 FRITZ_TMP="/tmp"
  ```
+__.env__
 
     * Adjust it according to your data.
  * For matrix-commander.py to work you need to run it manually the first time by `python3 matrix-commander` and follow the emerging dialog by putting in your matrix account data.
@@ -39,11 +40,11 @@ Provided you have docker and docker-compose installed on your system:
  * After that slightly edit the `docker-compose.yml`
    * and add
 ```
+   [...]
    volumes:
       - ../.:/app
 ```
- *
-
+   [...]
    * so that your repo is used as volume for the `/app` folder. So everything you change in the repo's folder will affect the docker container.
  * For __matrix-commander.py__ to work you need to run it manually the first time by `python3 matrix-commander` and follow the emerging dialog by putting in your matrix account data.
    * With docker that means that you need to open an _interactive shell_ in the running container (`docker-compose -f docker/docker-compose.yml exec app /bin/bash` and run this command there.
