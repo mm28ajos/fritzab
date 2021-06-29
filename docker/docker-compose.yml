@@ -7,8 +7,9 @@ services:
       context: ../.
       dockerfile: ./docker/Dockerfile
     working_dir: /app
-    volumes:
-      - ./:/app
+    entrypoint: ./fritzab2matrix.py
+#    volumes:
+#      - ./:/app
 
 
       

@@ -1,3 +1,4 @@
+#! /usr/bin/python3
 
 from fritzconnection import FritzConnection
 from dotenv import load_dotenv
@@ -85,7 +86,7 @@ def main():
 
                 # ... and send message and file to Matrix Room
                 command = "python3 matrix-commander.py -a " + os.path.join(env_tmp,"message.ogg") + " -m '{}'".format(msg_info)
-            #    os.system(command)
+                os.system(command)
             
             else:
                 # Mark MessageInfo as too short for the log
@@ -108,14 +109,22 @@ def main():
             continue
 
         continue
+    ### Monitor the FritzBox and trigger the main script whenever a call disconnects ###
+    ###################################################################################
+    endedCall(main, env_ip)
 
 
 
-main()
-
-### Monitor the FritzBox and trigger the main script whenever a call disconnects ###
-###################################################################################
-endedCall(main, env_ip)
+if __name__ == "__main__":
+    try:
+        print("I enter the main loop ...")
+        while main():
+            pass
+        else:
+            print("I left the main loop!")
+        
+    except:
+        print("An erroneous error happened!")
 
 
 
