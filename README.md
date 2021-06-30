@@ -26,7 +26,7 @@ If you like to test this repository you are recommended to use one of the follow
 FRITZ_USERNAME="fritzab"
 FRITZ_PASSWORD="SomeRand0mPa55word"
 FRITZ_IP="192.168.178.1" 
-FRITZ_VOICEBOX_PATH="fritz.nas/FRITZ/voicebox/rec"
+FRITZ_VOICEBOX_PATH="fritz.nas/FRITZ/voicebox"
 FRITZ_TMP="/tmp"
  ```
 __.env__
