@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#!/usr/bin/env python
 
 from fritzconnection import FritzConnection
 from dotenv import load_dotenv
@@ -139,6 +139,5 @@ if __name__ == "__main__":
 
 
         
-
 
 

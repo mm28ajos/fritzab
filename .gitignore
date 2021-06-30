@@ -140,7 +140,7 @@ cython_debug/
 
 # matrix-commander
 /store
-credentials.json
+credentials*
 
 # emacs
 *~
