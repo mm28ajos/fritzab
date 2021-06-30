@@ -26,7 +26,7 @@ if env_voicebox is None:
 if env_tmp is None:
     env_tmp = "/tmp"
 
-def main():
+def fritzab2matrix():
 
     ### CHECK AND GET MESSAGES FROM FRITZBOX ###
     ############################################
@@ -119,19 +119,16 @@ def main():
             continue
 
         continue
-    ### Monitor the FritzBox and trigger the main script whenever a call disconnects ###
-    ###################################################################################
-    endedCall(main, env_ip)
 
 
 
 if __name__ == "__main__":
 
-    print("I enter the main loop ...")
-    while main():
-        pass
-    else:
-        print("I left the main loop!")
+    fritzab2matrix()
+    ### Monitor the FritzBox and trigger the main script whenever a call disconnects ###
+    ###################################################################################
+    endedCall(fritzab2matrix, env_ip)
+
         
 
 
