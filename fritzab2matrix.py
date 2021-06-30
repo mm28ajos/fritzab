@@ -42,6 +42,7 @@ def main():
     message_list_url = message_list['NewURL']
 
 
+
     # Build the url to download the message via smb
     def build_download_url(mid, tam=0):
         recording = "rec." + str(tam) + r"." + str(mid).zfill(3)
@@ -62,12 +63,13 @@ def main():
             messages = xmltodict.parse(doc)
             return messages
 
+    l = get_message_list(message_list_url)
 
-    for a in get_message_list(message_list_url)['Root']['Message']:
+    for a in l['Root']['Message']:
         
         # format the information regarding the message
         msg_info = a['Date'] + " - " + a['Number']
-        if len(a['Name']) > 1:
+        if a['Name']:
             msg_info += " (" + a['Name'] + ") "
             
         # format the string for sound file's meta information
