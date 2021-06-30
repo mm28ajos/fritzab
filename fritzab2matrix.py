@@ -17,7 +17,12 @@ load_dotenv()
 env_user = os.environ.get('FRITZ_USERNAME')
 env_pass = os.environ.get('FRITZ_PASSWORD')
 env_ip = os.environ.get('FRITZ_IP')
+env_voicebox = os.environ.get('FRITZ_VOICEBOX_PATH')
 env_tmp = os.environ.get('TEMP_DIR')
+
+if env_voicebox is None:
+    env_voicebox = "/fritz.nas/FRITZ/voicebox/"
+
 if env_tmp is None:
     env_tmp = "/tmp"
 
@@ -39,7 +44,8 @@ def main():
 
     # Build the url to download the message via smb
     def build_download_url(mid, tam=0):
-        url = r"//" + env_ip + r"/fritz.nas/FRITZ/voicebox/rec/rec." + str(tam) + r"." + str(mid).zfill(3)
+        recording = "rec." + str(tam) + r"." + str(mid).zfill(3)
+        url = os.path.join("//",env_ip,env_voicebox,"rec",recording)
         return url
 
     def download_speex_file(smb_url):
