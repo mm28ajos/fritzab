@@ -64,6 +64,8 @@ def main():
             return messages
 
     l = get_message_list(message_list_url)
+    if l['Root'] == None:
+        return False
 
     for a in l['Root']['Message']:
         
@@ -124,15 +126,14 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        print("I enter the main loop ...")
-        while main():
-            pass
-        else:
-            print("I left the main loop!")
+
+    print("I enter the main loop ...")
+    while main():
+        pass
+    else:
+        print("I left the main loop!")
         
-    except:
-        print("An erroneous error happened!")
+
 
 
 
