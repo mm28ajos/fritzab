@@ -10,6 +10,7 @@ If you like to test this repository you are recommended to use one of the follow
  * Create a new user (e.g. "fritzab") in your _Fritz!Box_. **Don't use your default admin account!**
    * This user needs only the privileges regarding voice messages and to read from box's storage.
    * As you only need to access the _FRITZ/voicebox/rec/_ path you should remove the right to read and write everything and add only this path and only with reading privilege.
+     * __Beware!__ If you use a USB device as expanded storage for your _Fritz!Box_ and allowed the TAM to use it for storing more messages you will need another path (e.g. _Storage-01/FRITZ/voicebox/rec/_). You also have to add the FRITZ_VOICEBOX_PATH variable in your _.env_ file (see below) according to that difference.
  * You have to activate __Call Monitoring__ on your _Fritz!Box_ by using one of the connected phones and call `#96*5*`.
    * Call monitoring watches the box and the __FritzAB2Matrix__ is triggered every time a call disconnects.
    * If you cannot activate Call Monitoring the only way to use __FritzAB2MAtrix__  will be to have a cron job call it regularly. 
@@ -25,6 +26,7 @@ If you like to test this repository you are recommended to use one of the follow
 FRITZ_USERNAME="fritzab"
 FRITZ_PASSWORD="SomeRand0mPa55word"
 FRITZ_IP="192.168.178.1" 
+FRITZ_VOICEBOX_PATH="fritz.nas/FRITZ/voicebox/rec"
 FRITZ_TMP="/tmp"
  ```
 __.env__
