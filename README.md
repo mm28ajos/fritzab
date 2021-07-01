@@ -20,7 +20,7 @@ If you like to test this repository you are recommended to use one of the follow
    * Make it a virtual environment by `python3 -m venv <new folder>` and `source <new folder>/bin/activate`.
    * `cd <new folder>`
  * Clone the repo.
- * Inside the repo run `pip install --update pip && pip install -r requirements.txt`
+ * Inside the repo run `pip install --upgrade pip && pip install -r requirements.txt`
  * Create an `.env` file with your favourite editor:
  ```
 FRITZ_USERNAME="fritzab"
