@@ -64,10 +64,16 @@ def fritzab2matrix():
             return messages
 
     l = get_message_list(message_list_url)
-    if l['Root'] == None:
+    if l['Root'] == None or l['Root']['Message'] == None:
         return False
+    else:
+        messages = l['Root']['Message']
+        if type(messages) is not list:
+            m = []
+            m.append(messages)
+            messages = m
 
-    for a in l['Root']['Message']:
+    for a in messages:
         
         # format the information regarding the message
         msg_info = a['Date'] + " - " + a['Number']
@@ -139,5 +145,3 @@ if __name__ == "__main__":
 
 
         
-
-
