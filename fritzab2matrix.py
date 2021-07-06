@@ -32,7 +32,7 @@ def build_download_url(mid, tam=0):
     recording = "rec." + str(tam) + r"." + str(mid).zfill(3)
     url = os.path.join("//",env_ip,env_voicebox,"rec",recording)
     return url
-
+ 
 def download_speex_file(smb_url):
     smbclient.register_session(server=env_ip, username=env_user, password=env_pass, auth_protocol="ntlm")
     fd = smbclient.open_file(smb_url, mode="rb")
