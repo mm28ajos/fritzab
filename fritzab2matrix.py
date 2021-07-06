@@ -26,6 +26,28 @@ if env_voicebox is None:
 if env_tmp is None:
     env_tmp = "/tmp"
 
+
+    # Build the url to download the message via smb
+def build_download_url(mid, tam=0):
+    recording = "rec." + str(tam) + r"." + str(mid).zfill(3)
+    url = os.path.join("//",env_ip,env_voicebox,"rec",recording)
+    return url
+
+def download_speex_file(smb_url):
+    smbclient.register_session(server=env_ip, username=env_user, password=env_pass, auth_protocol="ntlm")
+    fd = smbclient.open_file(smb_url, mode="rb")
+    return fd
+    
+
+def get_message_list(url):
+    """ Get and and convert the xml formatted list of messages into a dictionary. """
+    with urllib.request.urlopen(url) as f:
+        doc = f.read()
+        # Convert the xml formatted message list to dict
+        messages = xmltodict.parse(doc)
+        return messages
+
+
 def fritzab2matrix():
 
     ### CHECK AND GET MESSAGES FROM FRITZBOX ###
@@ -43,25 +65,6 @@ def fritzab2matrix():
 
 
 
-    # Build the url to download the message via smb
-    def build_download_url(mid, tam=0):
-        recording = "rec." + str(tam) + r"." + str(mid).zfill(3)
-        url = os.path.join("//",env_ip,env_voicebox,"rec",recording)
-        return url
-
-    def download_speex_file(smb_url):
-        smbclient.register_session(server=env_ip, username=env_user, password=env_pass, auth_protocol="ntlm")
-        fd = smbclient.open_file(smb_url, mode="rb")
-        return fd
-    
-
-    def get_message_list(url):
-        """ Get and and convert the xml formatted list of messages into a dictionary. """
-        with urllib.request.urlopen(url) as f:
-            doc = f.read()
-            # Convert the xml formatted message list to dict
-            messages = xmltodict.parse(doc)
-            return messages
 
     l = get_message_list(message_list_url)
     if l['Root'] == None or l['Root']['Message'] == None:
