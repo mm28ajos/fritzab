@@ -6,7 +6,7 @@ from pydub import AudioSegment
 from libs.monitoring import endedCall
 from libs.message import conversion as conv
 import urllib.request
-import xmltodict
+import xmltodict, json
 import sys, os
 import smbclient
 
@@ -18,10 +18,17 @@ env_user = os.environ.get('FRITZ_USERNAME')
 env_pass = os.environ.get('FRITZ_PASSWORD')
 env_ip = os.environ.get('FRITZ_IP')
 env_voicebox = os.environ.get('FRITZ_VOICEBOX_PATH')
+env_tam = json.loads(os.environ.get('FRITZ_TAM'))
 env_tmp = os.environ.get('TEMP_DIR')
 
 if env_voicebox is None:
     env_voicebox = "/fritz.nas/FRITZ/voicebox/"
+
+if env_tam is None:
+    env_tam = {
+        "0" : "!MxRrNGhFuQwnIeEWnX:ismus.net"
+        }
+print(env_tam)
 
 if env_tmp is None:
     env_tmp = "/tmp"
@@ -60,11 +67,30 @@ def fritzab2matrix():
 
 
     ## Get info about messages from the main answering machine
-    message_list = fc.call_action("X_AVM-DE_TAM1", "GetMessageList", NewIndex=0)
+    message_list = fc.call_action("X_AVM-DE_TAM1", "GetMessageList", NewIndex=tam)
     message_list_url = message_list['NewURL']
 
 
 
+    # Build the url to download the message via smb
+    def build_download_url(mid, tam=tam):
+        recording = "rec." + str(tam) + r"." + str(mid).zfill(3)
+        url = os.path.join("//",env_ip,env_voicebox,"rec",recording)
+        return url
+
+    def download_speex_file(smb_url):
+        smbclient.register_session(server=env_ip, username=env_user, password=env_pass, auth_protocol="ntlm")
+        fd = smbclient.open_file(smb_url, mode="rb")
+        return fd
+    
+
+    def get_message_list(url):
+        """ Get and and convert the xml formatted list of messages into a dictionary. """
+        with urllib.request.urlopen(url) as f:
+            doc = f.read()
+            # Convert the xml formatted message list to dict
+            messages = xmltodict.parse(doc)
+            return messages
 
     l = get_message_list(message_list_url)
     if l['Root'] == None or l['Root']['Message'] == None:
@@ -94,17 +120,17 @@ def fritzab2matrix():
             # Download and convert the speex files to wav
             smb_url = build_download_url(a['Index'])
             speex_fd = download_speex_file(smb_url)
-            conv.speex_convert(speex_fd, os.path.join(env_tmp,"message.wav"))
+            conv.speex_convert(speex_fd, os.path.join(env_tmp,"message{}.wav".format(tam)))
             # Convert wav to ogg
-            msg = AudioSegment.from_wav(os.path.join(env_tmp,"message.wav"))
+            msg = AudioSegment.from_wav(os.path.join(env_tmp,"message{}.wav".format(tam)))
         
             # Only if message is longer than 5 seconds ...
             if msg.duration_seconds > 5.0:
                 # ... export to ogg ...
-                msg.export(os.path.join(env_tmp,"message.ogg"), format="ogg", tags=msg_tags)
+                msg.export(os.path.join(env_tmp,"message{}.ogg".format(tam)), format="ogg", tags=msg_tags)
 
                 # ... and send message and file to Matrix Room
-                command = "python3 matrix-commander.py -a " + os.path.join(env_tmp,"message.ogg") + " -m '{}'".format(msg_info)
+                command = "python3 matrix-commander.py --room {} -a ".format(env_tam[tam]) + os.path.join(env_tmp,"message{}.ogg".format(tam)) + " -m '{}'".format(msg_info)
                 os.system(command)
             
             else:
@@ -115,7 +141,7 @@ def fritzab2matrix():
             print("** " + msg_info)
         
             # Mark processed messages as 'read'
-            fc.call_action("X_AVM-DE_TAM1", "MarkMessage", NewIndex=0, NewMessageIndex=int(a['Index']), NewMarkedAsRead=1)
+            fc.call_action("X_AVM-DE_TAM1", "MarkMessage", NewIndex=tam, NewMessageIndex=int(a['Index']), NewMarkedAsRead=1)
             
         else:
             # Show that message is already read
@@ -123,20 +149,24 @@ def fritzab2matrix():
 
             # ## For testing purposes only
 #            if a['Date'].endswith('20:53'):
-#                fc.call_action("X_AVM-DE_TAM1", "MarkMessage", NewIndex=0, NewMessageIndex=int(a['Index']), NewMarkedAsRead=0)          
+#                fc.call_action("X_AVM-DE_TAM1", "MarkMessage", NewIndex=1, NewMessageIndex=int(a['Index']), NewMarkedAsRead=0)          
       
             continue
 
         continue
 
-
+def multitam(tams):
+    for tam in tams.keys():
+        print("Check TAM {}.".format(tam))
+        fritzab2matrix(tam)
 
 if __name__ == "__main__":
 
-    fritzab2matrix()
+    
+    multitam(env_tam)
     ### Monitor the FritzBox and trigger the main script whenever a call disconnects ###
     ###################################################################################
-    endedCall(fritzab2matrix, env_ip)
+    endedCall(multitam,env_tam, env_ip)
 
         
 
