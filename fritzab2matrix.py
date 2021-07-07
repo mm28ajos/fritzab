@@ -55,7 +55,7 @@ def get_message_list(url):
         return messages
 
 
-def fritzab2matrix():
+def fritzab2matrix(tam):
 
     ### CHECK AND GET MESSAGES FROM FRITZBOX ###
     ############################################
