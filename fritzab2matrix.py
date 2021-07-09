@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from fritzconnection import FritzConnection
+from fritzconnection.lib.fritzcall import FritzCall, Call
 from dotenv import load_dotenv
 from pydub import AudioSegment
 from libs.monitoring import endedCall
@@ -54,6 +55,15 @@ def get_message_list(url):
         messages = xmltodict.parse(doc)
         return messages
 
+def get_last_call():
+    """ Get the last Call. """
+    try:
+        fc = FritzCall(address=env_ip,password=env_pass)
+    except:
+        print("Couldn't connect to Box")
+    missed_calls = fc.get_missed_calls()
+    return missed_calls.pop()
+
 
 def fritzab2matrix(tam):
 
@@ -63,34 +73,13 @@ def fritzab2matrix(tam):
     ## Connect to the FritzBox in the LAN
     # We don't use tls because the self-signed cert of the box leads to a malfunction in urllib later on.
     fc = FritzConnection(address=env_ip, user=env_user, password=env_pass, use_tls=False)
-
+    at_least_one_new_message = False
 
 
     ## Get info about messages from the main answering machine
     message_list = fc.call_action("X_AVM-DE_TAM1", "GetMessageList", NewIndex=tam)
     message_list_url = message_list['NewURL']
-
-
-
-    # Build the url to download the message via smb
-    def build_download_url(mid, tam=tam):
-        recording = "rec." + str(tam) + r"." + str(mid).zfill(3)
-        url = os.path.join("//",env_ip,env_voicebox,"rec",recording)
-        return url
-
-    def download_speex_file(smb_url):
-        smbclient.register_session(server=env_ip, username=env_user, password=env_pass, auth_protocol="ntlm")
-        fd = smbclient.open_file(smb_url, mode="rb")
-        return fd
-    
-
-    def get_message_list(url):
-        """ Get and and convert the xml formatted list of messages into a dictionary. """
-        with urllib.request.urlopen(url) as f:
-            doc = f.read()
-            # Convert the xml formatted message list to dict
-            messages = xmltodict.parse(doc)
-            return messages
+        
 
     l = get_message_list(message_list_url)
     if l['Root'] == None or l['Root']['Message'] == None:
@@ -116,7 +105,7 @@ def fritzab2matrix(tam):
         message_new = bool(int(a['New']))
     
         if message_new == True:
-
+            at_least_one_new_message = True
             # Download and convert the speex files to wav
             smb_url = build_download_url(a['Index'])
             speex_fd = download_speex_file(smb_url)
@@ -147,18 +136,16 @@ def fritzab2matrix(tam):
             # Show that message is already read
             print("__ " + msg_info)
 
-            # ## For testing purposes only
-#            if a['Date'].endswith('20:53'):
-#                fc.call_action("X_AVM-DE_TAM1", "MarkMessage", NewIndex=1, NewMessageIndex=int(a['Index']), NewMarkedAsRead=0)          
-      
-            continue
 
-        continue
+        
 
 def multitam(tams):
     for tam in tams.keys():
         print("Check TAM {}.".format(tam))
         fritzab2matrix(tam)
+ #   if not at_least_one_new_message:
+ #       print(get_last_call())
+
 
 if __name__ == "__main__":
 
