@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1
 
-FROM ubuntu:latest
+FROM alpine:latest
 
 ENV TZ=Europe/Berlin
+ENV UNBUFFERED=1
 
 WORKDIR /app
 VOLUME /app
@@ -10,23 +11,10 @@ VOLUME /app
 COPY . .
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; \
-    /bin/bash -c 'apt update && apt install -y libolm-dev python3-pip ffmpeg htop; \
-    pip install update pip && pip install -r requirements.txt ;'
+    /bin/sh -c 'apk update && apk add --no-cache gcc musl-dev python3-dev py3-pip libffi-dev openssl-dev cargo zlib-dev jpeg-dev speex ffmpeg htop; \
+    pip install update pip && pip install -r requirements.txt ; \
+    apk del zlib-dev jpeg-dev gcc musl-dev python3-dev libffi-dev openssl-dev cargo;'
 
 
 
-ENTRYPOINT ["./fritzab2matrix.py "]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ENTRYPOINT ["python3", "-u", "fritzab2matrix.py "]
