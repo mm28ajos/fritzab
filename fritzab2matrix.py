@@ -20,7 +20,14 @@ env_pass = os.environ.get('FRITZ_PASSWORD')
 env_ip = os.environ.get('FRITZ_IP')
 env_voicebox = os.environ.get('FRITZ_VOICEBOX_PATH')
 env_tam = json.loads(os.environ.get('FRITZ_TAM'))
+env_call_watch = eval(os.environ.get('FRITZ_CALL_WATCH'))
 env_tmp = os.environ.get('TEMP_DIR')
+
+if env_call_watch is None:
+    env_call_watch = False
+elif env_call_watch:
+    at_least_one_new_message = False
+
 
 if env_voicebox is None:
     env_voicebox = "/fritz.nas/FRITZ/voicebox/"
@@ -29,10 +36,11 @@ if env_tam is None:
     env_tam = {
         "0" : "!MxRrNGhFuQwnIeEWnX:ismus.net"
         }
-print(env_tam)
+#print(env_tam)
 
 if env_tmp is None:
     env_tmp = "/tmp"
+
 
 
     # Build the url to download the message via smb
@@ -61,8 +69,24 @@ def get_last_call():
         fc = FritzCall(address=env_ip,password=env_pass)
     except:
         print("Couldn't connect to Box")
-    missed_calls = fc.get_missed_calls()
-    return missed_calls.pop()
+    missed_calls = fc.get_missed_calls(False,1,1)
+    return missed_calls[0]
+
+def lastcall2matrix(tam,tam_no):
+    # Call Watch to Matrix
+    if env_call_watch and not at_least_one_new_message:
+        c = get_last_call()
+        c_msg = "{} - {} ({})".format(c.Date, c.Caller, c.Name)
+        
+        # ... and send message and file to Matrix Room
+        ## if Number of a TAM and the last call match
+        if tam_no == c.CalledNumber:
+            cmd = "python3 matrix-commander.py --room {} -m '{}'".format(env_tam[tam],c_msg)
+            os.system(cmd)
+        
+    else:
+        print("Call Watch is off.")
+
 
 
 def fritzab2matrix(tam):
@@ -136,6 +160,8 @@ def fritzab2matrix(tam):
             # Show that message is already read
             print("__ " + msg_info)
 
+    tam_no = a['Called']
+    lastcall2matrix(tam,tam_no)
 
         
 
@@ -143,8 +169,8 @@ def multitam(tams):
     for tam in tams.keys():
         print("Check TAM {}.".format(tam))
         fritzab2matrix(tam)
- #   if not at_least_one_new_message:
- #       print(get_last_call())
+
+
 
 
 if __name__ == "__main__":
