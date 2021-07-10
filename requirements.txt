@@ -1,3 +1,4 @@
+
 fritzconnection
 python-dotenv
 xmltodict
@@ -7,12 +8,15 @@ pydub
 # for matrix-commander
 
 aiohttp
-aiofiles
+aiofiles #<0.5.0,>=0.4.0   
 argparse
 asyncio
+atomicwrites
+cachetools
 datetime
 markdown
-matrix-nio
+matrix-nio # [e2e]>=0.18.3
+peewee
 Pillow
 python_magic
 uuid
