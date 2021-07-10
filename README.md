@@ -5,6 +5,7 @@ __FritzAB2Matrix__ reads out the answering machine (_TAM_) of a _Fritz!Box_ in y
 Uses the python based cmd-line-tool [matrix-commander](https://github.com/8go/matrix-commander) so the matrix-commander.py in this repo is just a copy of that file to ease testing.
 ## Features
  * Since _v0.1.1_ __Multitam__ is integrated so that you can check multiple answering machines __and__ post the messages to different matrix rooms. (Use _FRITZ\_TAM_ variable in .env file)
+ * Set _FRITZ\_CALL\_WATCH_=True if you want to receive a message everytime you miss a call.
 ## Installation
 If you like to test this repository you are recommended to use one of the following two options.
 ### Necessary preparations for both cases
@@ -30,6 +31,7 @@ FRITZ_IP="192.168.178.1"
 FRITZ_TMP="/tmp" 
 # FRITZ_VOICEBOX_PATH="fritz.nas/FRITZ/voicebox" 
 FRITZ_TAM='{"0" : "!roomhash1:matrix.org", "1" : "!roomhash2:matrix.org"}' 
+FRITZ_CALL_WATCH=False
  ```
 __.env__
 
