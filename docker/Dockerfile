@@ -12,8 +12,8 @@ COPY . .
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; \
     /bin/sh -c 'apk update && apk add --no-cache gcc musl-dev python3-dev py3-pip libffi-dev openssl-dev cargo zlib-dev jpeg-dev speex ffmpeg htop; \
-    pip install update pip && pip install -r requirements.txt ;'
-    # apk del zlib-dev jpeg-dev gcc musl-dev python3-dev libffi-dev openssl-dev cargo;'
+    pip install update pip && pip install -r requirements.txt ; \
+    apk del zlib-dev jpeg-dev gcc musl-dev python3-dev libffi-dev openssl-dev cargo;'
 
 
 
