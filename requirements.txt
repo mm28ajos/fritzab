@@ -1,3 +1,4 @@
+requests
 fritzconnection
 python-dotenv
 xmltodict
