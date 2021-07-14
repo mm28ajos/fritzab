@@ -7,7 +7,7 @@ services:
       context: ../.
       dockerfile: ./docker/Dockerfile
     working_dir: /app
-#    entrypoint: /bin/sh -c "export UNBUFFERED=1 && python3 -u ./fritzab2matrix.py"
+    entrypoint: /bin/sh -c "export UNBUFFERED=1 && python3 -u ./fritzab2matrix.py"
     volumes:
       - ../.:/app
 

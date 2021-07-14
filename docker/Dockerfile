@@ -19,8 +19,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; 
     olm-dev \
     zlib-dev \
     jpeg-dev ; \
-    apk add --no-cache ffmpeg speex; \
-    pip install --no-cache-dir upgrade pip; \
+    apk add --no-cache olm libmagic ffmpeg speex; \
+    pip --no-cache-dir install upgrade pip; \
     pip install --no-cache-dir -r requirements.txt ; \
     apk del --no-cache .build-deps;
 
