@@ -16,6 +16,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; 
     cargo \
     libffi-dev \
     openssl-dev \
+    olm-dev \
     zlib-dev \
     jpeg-dev ; \
     apk add --no-cache ffmpeg speex; \
