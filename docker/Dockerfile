@@ -20,10 +20,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; 
     zlib-dev \
     jpeg-dev ; \
     apk add --no-cache olm libmagic ffmpeg speex; \
-    pip --no-cache-dir install upgrade pip; \
+    pip install pip -U --no-cache-dir; \
     pip install --no-cache-dir -r requirements.txt ; \
     apk del --no-cache .build-deps;
 
 
 
-ENTRYPOINT ["python3", "-u", "fritzab2matrix.py "]
+# ENTRYPOINT ["python3", "-u", "fritzab2matrix.py"]
+ENTRYPOINT /bin/sh -c "export UNBUFFERED=1 && python3 -u ./fritzab2matrix.py"
