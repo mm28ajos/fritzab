@@ -70,13 +70,20 @@ def get_last_call():
     except:
         print("Couldn't connect to Box")
     missed_calls = fc.get_missed_calls(False,1,1)
-    return missed_calls[0]
+    
+    if len(missed_calls) > 0:
+        return missed_calls[0]
+    else:
+        return False
 
 def lastcall2matrix(tam,tam_no):
     # Call Watch to Matrix
     if env_call_watch and not at_least_one_new_message:
         c = get_last_call()
-        c_msg = "{} - {} ({})".format(c.Date, c.Caller, c.Name)
+        if c:
+            c_msg = "{} - {} ({})".format(c.Date, c.Caller, c.Name)
+        else:
+            return False
         
         # ... and send message and file to Matrix Room
         ## if Number of a TAM and the last call match

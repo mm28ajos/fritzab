@@ -15,9 +15,9 @@ atomicwrites
 cachetools
 datetime
 markdown
-matrix-nio # [e2e]>=0.18.3
+matrix-nio[e2e]>=0.18.3
 peewee
 Pillow
-python_magic
+python-magic
 uuid
 
