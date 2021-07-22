@@ -172,7 +172,7 @@ def fritzab2matrix(tam):
         
 
 def multitam(tams):
-    time.sleep(5)
+    time.sleep(10)
     for tam in tams.keys():
         print("Check TAM {}.".format(tam))
         fritzab2matrix(tam)
