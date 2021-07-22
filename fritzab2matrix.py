@@ -8,7 +8,7 @@ from libs.monitoring import endedCall
 from libs.message import conversion as conv
 import urllib.request
 import xmltodict, json
-import sys, os
+import sys, os, time
 import smbclient
 
 
@@ -97,7 +97,6 @@ def lastcall2matrix(tam,tam_no):
 
 
 def fritzab2matrix(tam):
-
     ### CHECK AND GET MESSAGES FROM FRITZBOX ###
     ############################################
 
@@ -173,6 +172,7 @@ def fritzab2matrix(tam):
         
 
 def multitam(tams):
+    time.sleep(5)
     for tam in tams.keys():
         print("Check TAM {}.".format(tam))
         fritzab2matrix(tam)
