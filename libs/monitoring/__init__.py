@@ -15,9 +15,16 @@ def watch_disconnect(monitor, event_queue, func, tams, healthcheck_interval=10):
         else:
             # do event processing here:
             print(event)
-            if 'DISCONNECT' in event:
-                print("Anruf beendet. Jetzt den AB checken.\n")
+            if 'DISCONNECT;0' in event:
+                print("Incoming call stopped. Check the TAM.\n")
                 func(tams)
+
+            elif 'DISCONNECT;1' in event:
+                print("Outgoing call stopped. Do nothing.\n")
+
+            else:
+                print("Unknown event.\n")
+
 
 
 
