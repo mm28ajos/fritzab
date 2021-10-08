@@ -124,7 +124,7 @@ def fritzab2matrix(tam):
     for a in messages:
         
         # format the information regarding the message
-        msg_info = a['Date'] + " - " + a['Number']
+        msg_info = a['Date'] + " - " + str(a['Number'])
         if a['Name']:
             msg_info += " (" + a['Name'] + ") "
             
