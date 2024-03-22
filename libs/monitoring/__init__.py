@@ -4,8 +4,9 @@ from fritzconnection.core.fritzmonitor import FritzMonitor
 ### Monitor the calls of a fritzbox continously ###
 ###################################################
 
-def watch_disconnect(monitor, event_queue, func, tams, healthcheck_interval=10):
-    while True:
+def watch_disconnect(monitor, event_queue, func, killer, tams, healthcheck_interval=10):
+
+    while not killer.kill_now:
         try:
             event = event_queue.get(timeout=healthcheck_interval)
         except queue.Empty:
@@ -25,10 +26,7 @@ def watch_disconnect(monitor, event_queue, func, tams, healthcheck_interval=10):
             else:
                 print("Unknown event.\n")
 
-
-
-
-def endedCall(func, tams, fritz_ip='192.168.1.1'):
+def endedCall(func, tams, killer, fritz_ip):
     """ 
     Call this to trigger a given function if a call is disconnected 
     """
@@ -36,7 +34,9 @@ def endedCall(func, tams, fritz_ip='192.168.1.1'):
         # as a context manager FritzMonitor will shut down the monitor thread
         with FritzMonitor(address=fritz_ip) as monitor:
             event_queue = monitor.start()
-            watch_disconnect(monitor, event_queue, func, tams)
+            print("FritzBox call watcher started.")
+            watch_disconnect(monitor, event_queue, func, killer, tams)
+            print("FritzBox monitor stopped.")
     except (OSError, KeyboardInterrupt) as err:
         print(err)
 

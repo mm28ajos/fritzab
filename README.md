@@ -1,11 +1,11 @@
 # FritzAB2Matrix
 
-__FritzAB2Matrix__ reads out the answering machine (_TAM_) of a _Fritz!Box_ in your LAN and posts the messages into a private chat in the __matrix__ network. While you could let your _Fritz!Box_ send the messages by mail - unencrypted of course - the matrix chat is __e2e encrypted__. Which kindly acknowledges the privacy of any caller that leaves a message for you.
+A fork of this [repo](https://git.ismus.net/homer77/FritzAB2Matrix) which removes the sendig of the voice message via matrix and adds some tweaks. __FritzAB2Matrix__ reads out the answering machine (_TAM_) of a _Fritz!Box_ in your LAN.
 
-Uses the python based cmd-line-tool [matrix-commander](https://github.com/8go/matrix-commander) so the matrix-commander.py in this repo is just a copy of that file to ease testing.
 ## Features
- * Since _v0.1.1_ __Multitam__ is integrated so that you can check multiple answering machines __and__ post the messages to different matrix rooms. (Use _FRITZ\_TAM_ variable in .env file)
- * Set _FRITZ\_CALL\_WATCH_=True if you want to receive a message everytime you miss a call.
+ * Set _MARK\_MESSAGE\_READ_=False if you do not want to mark voice messages retrieved to be marked as read.
+ * Set _DELETE\_MESSAGE__=True if you do want to delete voice messages retrieved.
+
 ## Installation
 If you like to test this repository you are recommended to use one of the following two options.
 ### Necessary preparations for both cases
@@ -28,17 +28,17 @@ If you like to test this repository you are recommended to use one of the follow
 FRITZ_USERNAME="fritzab2matrix"
 FRITZ_PASSWORD="S0meSecretPa5sw02d"
 FRITZ_IP="192.168.178.1" 
-FRITZ_TMP="/tmp" 
-# FRITZ_VOICEBOX_PATH="fritz.nas/FRITZ/voicebox" 
-FRITZ_TAM='{"0" : "!roomhash1:matrix.org", "1" : "!roomhash2:matrix.org"}' 
-FRITZ_CALL_WATCH=False
+# optional, default values are set automatically
+# FRITZ_VOICEBOX_PATH="fritz.nas/FRITZ/voicebox"
+# MARK_MESSAGE_READ="True"
+# DELETE_MESSAGE="False"
+# FRITZ_TAM="0"
  ```
 __.env__
 
  *
     * Adjust it according to your data.
- * For matrix-commander.py to work you need to run it manually the first time by `python3 matrix-commander` and follow the emerging dialog by putting in your matrix account data.
- * After all that you can finally run `./fritzab2matrix.py` and your TAM messages should be posted in the chosen matrix chat.
+ * After all that you can finally run `./fritzab2.py` and your TAM messages should be downloaded automatically once recorded to /tmp/rec.
 ### Docker
 Provided you have docker and docker-compose installed on your system:
  * Clone the repo and cd into it.
@@ -49,20 +49,13 @@ Provided you have docker and docker-compose installed on your system:
 ```
   
    volumes:
-      - ../.:/app
+      - /some/path/recordings:/recordings
 ```
- *
-   * so that your repo is used as volume for the `/app` folder. So everything you change in the repo's folder will affect the docker container.
- * For __matrix-commander.py__ to work you need to run it manually the first time by `python3 matrix-commander` and follow the emerging dialog by putting in your matrix account data.
-   * With docker that means that you need to open an _interactive shell_ in the running container (`docker-compose -f docker/docker-compose.yml exec app /bin/bash` and run this command there.
-   * Follow the appearing dialog and input your matrix account data.
- * After all that the running docker container should watch your box and your TAM messages should be posted in the chosen matrix chat.
- 
- 
-   
+
 ### Special Thx
 Gratitude to all people that enabled that project by their passionate work and will to share it!
 Especially to
+ * https://git.ismus.net/homer77/FritzAB2Matrix 
  * https://github.com/kbr/fritzconnection
  * https://github.com/8go/matrix-commander
  * https://github.com/poljar/matrix-nio/

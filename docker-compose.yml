@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  app:
+    container_name: "fritzab2"
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - /some/path/recordings:/recordings
