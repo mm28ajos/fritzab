@@ -108,19 +108,11 @@ def fritzab2matrix(tam):
             smb_url = build_download_url(a['Index'])
             speex_fd = download_speex_file(smb_url)
             # create wav file
-            open(os.path.join(RECORDINGS_DIR,"message{}.wav".format(tam)), mode='w').close()
             conv.speex_convert(speex_fd, os.path.join(RECORDINGS_DIR,"message{}.wav".format(tam)))
+
             # Convert wav to ogg
             msg = AudioSegment.from_wav(os.path.join(RECORDINGS_DIR,"message{}.wav".format(tam)))
-
-            # Only if message is longer than 5 seconds ...
-            if msg.duration_seconds > 5.0:
-                # ... export to ogg ...
-                msg.export(os.path.join(RECORDINGS_DIR,"message{}.ogg".format(tam)), format="ogg", tags=msg_tags)
-
-            else:
-                # Mark MessageInfo as too short for the log
-                msg_info += " < 6 sec (not posted)"
+            msg.export(os.path.join(RECORDINGS_DIR,"message{}.ogg".format(tam)), format="ogg", tags=msg_tags)
 
             # Show that message is new
             print("** " + msg_info)
@@ -147,7 +139,7 @@ def multitam(tams):
 if __name__ == "__main__":
     # create graceful killer
     killer = GracefulKiller()
-
+    multitam(env_tam)
     ### Monitor the FritzBox and trigger the main script whenever a call disconnects ###
     ###################################################################################
     endedCall(multitam, env_tam, killer, env_ip)
