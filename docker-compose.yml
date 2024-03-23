@@ -6,3 +6,5 @@ services:
     build: .
     volumes:
       - /some/path/recordings:/recordings
+    env_file:
+      - .env

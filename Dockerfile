@@ -11,7 +11,7 @@ RUN adduser -D myuser
 USER myuser
 WORKDIR /home/myuser
 
-COPY --chown=myuser:myuser fritzab2.py libs .
+COPY --chown=myuser:myuser app/ ./
 
 ENV PATH="/home/myuser/.local/bin:${PATH}"
 
