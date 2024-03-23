@@ -107,6 +107,8 @@ def fritzab2matrix(tam):
             # Download and convert the speex files to wav
             smb_url = build_download_url(a['Index'])
             speex_fd = download_speex_file(smb_url)
+            # create wav file
+            open(os.path.join(RECORDINGS_DIR,"message{}.wav".format(tam)), mode='w').close()
             conv.speex_convert(speex_fd, os.path.join(RECORDINGS_DIR,"message{}.wav".format(tam)))
             # Convert wav to ogg
             msg = AudioSegment.from_wav(os.path.join(RECORDINGS_DIR,"message{}.wav".format(tam)))
