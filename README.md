@@ -7,7 +7,7 @@
 __FritzAB__ reads out the answering machine (_TAM_) of a _Fritz!Box_ in your LAN and writes it to the local file system. A fork of this [repo](https://git.ismus.net/homer77/FritzAB2Matrix) which removes the sendig of the voice message via matrix and adds some tweaks.
 
 # Docker Hub
-Find pre build images on [docker hub](https://hub.docker.com/repository/docker/mm28ajos/fritzab/general). The tag "latest" is rebuild nightly if updates exists.
+Find pre build images on [docker hub](https://hub.docker.com/repository/docker/mm28ajos/fritzab/general). The tag "latest" is rebuild every month if updates exists.
 
 ## Features
  * Set _MARK\_MESSAGE\_READ_=False if you do not want to mark voice messages retrieved to be marked as read.
